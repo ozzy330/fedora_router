@@ -1,0 +1,55 @@
+# router-config
+
+#! /bin/bash
+
+if [ "$EUID" -ne 0 ]; then
+            echo "Este script debe ejecutarse con privilegios de root."
+                exit 1
+fi
+
+echo "Previous config"
+cat /etc/dhcp/dhcpd.conf
+nft list ruleset
+
+# Limpiar configuraciones anteriores
+sudo nft flush ruleset
+sudo systemctl stop dhcpd
+sudo systemctl disable dhcpd
+sudo rm -f /etc/dhcp/dhcpd.conf
+sudo systemctl enable dhcpd
+
+cat /etc/dhcp/dhcpd.conf
+sudo nft list ruleset
+
+dnf install dhcp-server -y
+sudo dnf install nftables -y
+
+# Habilita el reenvio de paquetes
+sudo sysctl -w net.ipv4.ip_forward=1
+
+NFT_CONF="./nft.conf"
+DNS_CONF="./dhcp.conf"
+
+# Verificar si los archivos de configuración existen
+if [ ! -f "$NFT_CONF" ]; then
+    echo "Error: El archivo de configuración de nftables no existe: $NFT_CONF"
+    exit 1
+fi
+if [ ! -f "$DNS_CONF" ]; then
+    echo "Error: El archivo de configuración de dhcpd no existe: $DNS_CONF"
+    exit 1
+fi
+
+sudo cat "$DNS_CONF" > /etc/dhcp/dhcpd.conf
+sudo cat "$NFT_CONF" > /etc/sysconfig/nftables.conf
+
+LAN_INTRF="eth1"
+LAN_IP="10.30.0.1"
+
+ip addr add "$LAN_IP/16" dev "$LAN_INTRF"
+
+sudo systemctl restart dhcpd
+sudo systemctl restart nftables
+
+cat /etc/dhcp/dhcpd.conf
+sudo nft list ruleset

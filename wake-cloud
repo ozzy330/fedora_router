@@ -1,0 +1,15 @@
+# wake-cloud
+
+sudo dnf install net-tools
+
+# Nodo A
+sudo ether-wake 48:0f:cf:53:36:e2
+echo "Encendiendo Nodo A" 
+
+# Nodo B
+sudo ether-wake dc:4a:3e:7c:6b:82
+echo "Encendiendo Nodo B" 
+
+# Nodo C
+sudo ether-wake 48:0f:cf:53:35:65
+echo "Encendiendo Nodo C"
