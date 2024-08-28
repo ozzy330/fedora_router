@@ -28,7 +28,7 @@ sudo dnf install nftables -y
 sudo sysctl -w net.ipv4.ip_forward=1
 
 NFT_CONF="./nft.conf"
-DNS_CONF="./dhcp.conf"
+DNS_CONF="./dhcpd.conf"
 
 # Verificar si los archivos de configuración existen
 if [ ! -f "$NFT_CONF" ]; then
