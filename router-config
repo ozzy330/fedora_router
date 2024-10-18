@@ -44,7 +44,7 @@ sudo cat "$DNS_CONF" > /etc/dhcp/dhcpd.conf
 sudo cat "$NFT_CONF" > /etc/sysconfig/nftables.conf
 
 LAN_INTRF="eth1"
-LAN_IP="10.30.0.1"
+LAN_IP="10.10.0.1"
 
 ip addr add "$LAN_IP/16" dev "$LAN_INTRF"
 
